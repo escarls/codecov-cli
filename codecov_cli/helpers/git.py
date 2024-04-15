@@ -66,21 +66,16 @@ def parse_git_service(remote_repo_url: str):
     services = [service.value for service in GitService]
     parsed_url = urlparse(remote_repo_url)
     service = None
+    path = None
 
     scheme = parsed_url.scheme
     if scheme in ('https', 'ssh'):
-        netloc = parsed_url.netloc
-        if "@" in netloc:
-            netloc = netloc.split("@", 1)[1]
-        if "." in netloc:
-            netloc = netloc.split(".", 1)[0]
-        service = netloc
+        path = parsed_url.netloc
     if remote_repo_url.startswith("git@"):
         path = parsed_url.path
+    if path is not None:
         if "@" in path:
             path = path.split("@", 1)[1]
-        if ":" in path:
-            path = path.split(":", 1)[0]
         if "." in path:
             path = path.split(".", 1)[0]
         service = path
